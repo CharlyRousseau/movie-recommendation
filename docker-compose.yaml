@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  myapi:
+    build:
+      context: .
+      dockerfile: movie-recommendation-api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+      - DB_NAME=movie_recommendation
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    build:
+      context: .
+      dockerfile: local-database/Dockerfile
+    environment:
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_DB=movie_recommendation
+    healthcheck:
+      test: pg_isready -U myuser -d movie_recommendation
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  migration:
+    image: liquibase/liquibase:latest
+    volumes:
+      - ./database-migration/changelogs:/liquibase/changelog:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    command: --defaults-file=/liquibase/changelog/liquibase.properties update
+
