@@ -17,9 +17,7 @@ services:
         condition: service_healthy
 
   db:
-    build:
-      context: .
-      dockerfile: local-database/Dockerfile
+    image: postgres:16.2-alpine
     environment:
       - POSTGRES_USER=myuser
       - POSTGRES_PASSWORD=mypassword
