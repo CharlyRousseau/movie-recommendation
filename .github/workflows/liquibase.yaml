@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: liquibase-github-actions/update@v4.27.0
       with:
-        changelogFile: "database-migrations/changelogs/db.changelog-master.xml"
+        changelogFile: "db.changelog-master.xml"
         url: ${{ secrets.DB_URL }}
         driver: "org.postgresql.Driver"
         password: ${{ secrets.DB_PASSWORD }}
