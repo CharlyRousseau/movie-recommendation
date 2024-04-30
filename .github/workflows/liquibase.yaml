@@ -10,12 +10,14 @@ jobs:
 
   basic-ubuntu-20:
     runs-on: ubuntu-20.04
-
+    
     steps:
     - uses: actions/checkout@v3
+    - name: Copy database-migration directory
+      run: cp -r database-migration $GITHUB_WORKSPACE
     - uses: liquibase-github-actions/update@v4.27.0
       with:
-        changelogFile: "movie-recommendation/database-migration/changelogs/db.changelog-master.xml"
+        changelogFile: "db.changelog-master.xml"
         url: ${{ secrets.DB_URL }}
         driver: "org.postgresql.Driver"
         password: ${{ secrets.DB_PASSWORD }}
