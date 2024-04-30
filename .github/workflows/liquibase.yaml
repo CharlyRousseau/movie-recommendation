@@ -1,9 +1,22 @@
-steps:
-- uses: actions/checkout@v3
-- uses: liquibase-github-actions/update@v4.27.0
-  with:
-    changelogFile: "database-migrations/changelogs/db.changelog-master.xml"
-    url: ${{ secrets.DB_URL }}
-    driver: "org.postgresql.Driver"
-    password: ${{ secrets.DB_PASSWORD }}
-    username: ${{ secrets.DB_USERNAME }}
+name: migration
+on:
+  push:
+    branches:
+      - 'master'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+
+  basic-ubuntu-20:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: liquibase-github-actions/update@v4.27.0
+      with:
+        changelogFile: "database-migrations/changelogs/db.changelog-master.xml"
+        url: ${{ secrets.DB_URL }}
+        driver: "org.postgresql.Driver"
+        password: ${{ secrets.DB_PASSWORD }}
+        username: ${{ secrets.DB_USERNAME }}
