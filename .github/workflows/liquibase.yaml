@@ -1,17 +1,3 @@
-name: Liquibase Migration
-
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'database-migrations/changelogs/**'
-
-    
-jobs:
-  liquibase_migration:
-    runs-on: ubuntu-latest
-
 steps:
 - uses: actions/checkout@v3
 - uses: liquibase-github-actions/update@v4.27.0
