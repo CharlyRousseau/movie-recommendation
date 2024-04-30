@@ -1,0 +1,63 @@
+name: Deploy to SFTP and Restart Services
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy API to SFTP
+        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        with:
+          server: sftp://sftp1.example.com
+          username: ${{ secrets.SFTP1_USERNAME }}
+          password: ${{ secrets.SFTP1_PASSWORD }}
+          local-dir: ./movie-recommendation-api/
+          git-ftp-args: --syncroot movie-recommendation-api --all
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Deploy Frontend to SFTP
+        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        with:
+          server: sftp://sftp2.example.com
+          username: ${{ secrets.SFTP2_USERNAME }}
+          password: ${{ secrets.SFTP2_PASSWORD }}
+          local-dir: ./movie-recommendation-frontend/
+          git-ftp-args: --syncroot movie-recommendation-frontend --all
+
+  restart-api:
+    needs: [deploy-api]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart API Server
+        run: |
+          curl "https://panel.cursehosting.com/api/client/service/39cfea52/power" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -X POST \
+            -d '{"signal": "restart"}'
+
+  restart-frontend:
+    needs: [deploy-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restart Frontend Server
+        run: |
+          curl "https://panel.cursehosting.com/api/client/service/6b74f8f4/power" \
+            -H "Accept: application/json" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -X POST \
+            -d '{"signal": "restart"}'
