@@ -25,6 +25,7 @@
   "dependencies": {
     "bits-ui": "^0.21.6",
     "clsx": "^2.1.1",
+    "dotenv": "^16.4.5",
     "lucide-svelte": "^0.376.1",
     "svelte-routing": "^2.12.0",
     "svelte-spa-router": "^4.0.1",
