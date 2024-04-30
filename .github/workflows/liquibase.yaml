@@ -13,8 +13,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-    - name: Copy database-migration directory
-      run: cp -r database-migration $GITHUB_WORKSPACE
+    - name: Copy contents of database-migration/changelogs directory to workspace root
+      run: cp -r database-migration/changelogs/* $GITHUB_WORKSPACE
     - uses: liquibase-github-actions/update@v4.27.0
       with:
         changelogFile: "db.changelog-master.xml"
