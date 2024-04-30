@@ -58,6 +58,7 @@
                 <Label class="sr-only" for="email">Email</Label>
                 <Input
                     id="email"
+                    bind:value={email}
                     placeholder="name@example.com"
                     type="email"
                     autocapitalize="none"

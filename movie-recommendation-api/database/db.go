@@ -41,9 +41,9 @@ func (db *DB) CreateUser(user *User) error {
 	return nil
 }
 
-func (db *DB) LoginUser(username, password string) (*User, error) {
+func (db *DB) LoginUser(email, password string) (*User, error) {
 	var user User
-	if err := db.Where("username = ?", username).First(&user).Error; err != nil {
+	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("invalid login credentials")
 		}
