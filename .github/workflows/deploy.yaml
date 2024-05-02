@@ -17,7 +17,7 @@ jobs:
         with:
           server: sftp://sftp1.example.com
           username: ${{ secrets.SFTP1_USERNAME }}
-          password: ${{ secrets.SFTP1_PASSWORD }}
+          password: ${{ secrets.SFTP_PASSWORD }}
           local-dir: ./movie-recommendation-api/
           git-ftp-args: --syncroot movie-recommendation-api --all
 
@@ -32,7 +32,7 @@ jobs:
         with:
           server: sftp://sftp2.example.com
           username: ${{ secrets.SFTP2_USERNAME }}
-          password: ${{ secrets.SFTP2_PASSWORD }}
+          password: ${{ secrets.SFTP_PASSWORD }}
           local-dir: ./movie-recommendation-frontend/
           git-ftp-args: --syncroot movie-recommendation-frontend --all
 
