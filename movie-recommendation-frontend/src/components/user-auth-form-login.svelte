@@ -31,10 +31,13 @@
                 body: JSON.stringify({ email, password }),
             });
 
+            const data = await response.json();
+
             if (!response.ok) {
-                const data = await response.json();
                 error = data.message;
             } else {
+                localStorage.setItem("jwt", data.token);
+
                 success = "Successfully logged in! Redirecting...";
                 setTimeout(() => {
                     navigate("/");

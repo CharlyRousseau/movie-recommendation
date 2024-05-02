@@ -22,12 +22,13 @@
             method: "GET",
             headers: {
                 accept: "application/json",
-                Authorization: "Bearer ",
+                Authorization:
+                    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYjc2YmJmNjVhOWUwZjJmOTJjMjVhZDAyMjM0NzVmMCIsInN1YiI6IjY2MzBlZmU2NmEzMDBiMDEyMjYwOWNiOSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Emhv8C3hQseouTYE8SYFAqk5Ojrl5Aw2Zd_h4sp271Y",
             },
         };
 
         const response = await fetch(
-            `https://api.themoviedb.org/3/trending/movie/day?page=${page}`,
+            `https://api.themoviedb.org/3/discover/movie?page=${page}`,
             options,
         );
         const data = await response.json();
@@ -44,7 +45,7 @@
     class="container space-x-4 lg:space-x-6 md:space-x-8 px-4 py-2 md:px-6 md:py-4 lg:px-8 lg:py-6"
 >
     <Navbar />
-    <h1 class="text-2xl font-semibold tracking-tight">Trending</h1>
+    <h1 class="text-2xl font-semibold tracking-tight">Filter</h1>
     <div class="grid grid-cols-3 gap-4">
         {#each movies as movie (movie.id)}
             <MovieCard

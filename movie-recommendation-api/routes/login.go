@@ -1,12 +1,40 @@
 package routes
 
 import (
-	"net/http"
-
 	"movie-reccomendation-api/database"
+	"net/http"
+	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 )
+
+type UserResponse struct {
+	ID    int64  `json:"id"`
+	Email string `json:"email"`
+}
+
+func CreateUser(db *database.DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var user database.User
+		if err := c.Bind(&user); err != nil {
+			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		}
+		existingUser, err := db.GetUserByUsernameOrEmail(user.Username, user.Email)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+		if existingUser != nil {
+			return echo.NewHTTPError(http.StatusConflict, "Username or email is already taken")
+		}
+
+		if err := db.CreateUser(&user); err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+
+		return c.NoContent(http.StatusCreated)
+	}
+}
 
 func LoginUser(db *database.DB) echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -21,6 +49,28 @@ func LoginUser(db *database.DB) echo.HandlerFunc {
 			return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 		}
 
-		return c.JSON(http.StatusOK, user)
+		claims := &jwtCustomClaims{
+			user.ID,
+			jwt.RegisteredClaims{
+				ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 72)),
+			},
+		}
+
+		token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+		t, err := token.SignedString([]byte("secret"))
+		if err != nil {
+			return err
+		}
+
+		userResponse := &UserResponse{
+			ID:    user.ID,
+			Email: user.Email,
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"user":  userResponse,
+			"token": t,
+		})
 	}
 }
