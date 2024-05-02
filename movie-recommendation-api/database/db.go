@@ -11,15 +11,17 @@ import (
 type DB struct {
 	*gorm.DB
 }
+
 type User struct {
 	ID       int64
 	Username string
 	Email    string
 	Password string
 }
+
 type Favorite struct {
-    UserID  int64 `gorm:"primaryKey;autoIncrement:false"`
-    MovieID int64 `gorm:"primaryKey;autoIncrement:false"`
+	UserID  int64 `gorm:"primaryKey;autoIncrement:false"`
+	MovieID int64 `gorm:"primaryKey;autoIncrement:false"`
 }
 
 func NewDB(connectionString string) (*DB, error) {
@@ -74,24 +76,24 @@ func (db *DB) GetUserByUsernameOrEmail(username, email string) (*User, error) {
 }
 
 func (db *DB) AddFavorite(userID, movieID int64) error {
-    fav := Favorite{UserID: userID, MovieID: movieID}
-    result := db.Create(&fav)
-    if result.Error != nil {
-        return result.Error
-    }
-    return nil
+	fav := Favorite{UserID: userID, MovieID: movieID}
+	result := db.Create(&fav)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
 
 func (db *DB) GetFavorites(userID int64) ([]int64, error) {
-    var favorites []Favorite
-    result := db.Where("user_id = ?", userID).Find(&favorites)
-    if result.Error != nil {
-        return nil, result.Error
-    }
+	var favorites []Favorite
+	result := db.Where("user_id = ?", userID).Find(&favorites)
+	if result.Error != nil {
+		return nil, result.Error
+	}
 
-    movieIDs := make([]int64, len(favorites))
-    for i, fav := range favorites {
-        movieIDs[i] = fav.MovieID
-    }
-    return movieIDs, nil
+	movieIDs := make([]int64, len(favorites))
+	for i, fav := range favorites {
+		movieIDs[i] = fav.MovieID
+	}
+	return movieIDs, nil
 }
