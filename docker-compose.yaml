@@ -12,6 +12,7 @@ services:
       - DB_USER=myuser
       - DB_PASSWORD=mypassword
       - DB_NAME=movie_recommendation
+      - TMDBApiKey=2b76bbf65a9e0f2f92c25ad0223475f0
     depends_on:
       db:
         condition: service_healthy
