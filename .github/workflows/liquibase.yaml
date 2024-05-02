@@ -2,8 +2,14 @@ name: migration
 on:
   push:
     branches:
-      - 'master'
+      - 'main'
+    paths:
+      - 'database-migration/changelogs/**'
   pull_request:
+    branches:
+      - 'main'
+    paths:
+      - 'database-migration/changelogs/**' 
   workflow_dispatch:
 
 jobs:
