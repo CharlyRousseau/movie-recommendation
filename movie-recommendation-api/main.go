@@ -5,8 +5,6 @@ import (
 	"log"
 	"movie-reccomendation-api/config"
 	"movie-reccomendation-api/database"
-	"movie-reccomendation-api/routes"
-	"movie-reccomendation-api/tmdb"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -32,18 +30,12 @@ func main() {
 
 	fmt.Println("Database connection successful!")
 
-	// Initialise le client TMDB avec l'API key
-	tmdbClient := tmdb.NewClient(cfg.TMDBApiKey)
-
 	e := echo.New()
 	// Add CORS middleware
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:5173"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
-	
-	// Enregistre les routes
-	routes.RegisterRoutes(e, db, tmdbClient)
 
 	// Start the server
 	log.Fatal(e.Start(":8080"))
