@@ -17,6 +17,10 @@ type User struct {
 	Email    string
 	Password string
 }
+type Favorite struct {
+    UserID  int64 `gorm:"primaryKey;autoIncrement:false"`
+    MovieID int64 `gorm:"primaryKey;autoIncrement:false"`
+}
 
 func NewDB(connectionString string) (*DB, error) {
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
@@ -67,4 +71,27 @@ func (db *DB) GetUserByUsernameOrEmail(username, email string) (*User, error) {
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (db *DB) AddFavorite(userID, movieID int64) error {
+    fav := Favorite{UserID: userID, MovieID: movieID}
+    result := db.Create(&fav)
+    if result.Error != nil {
+        return result.Error
+    }
+    return nil
+}
+
+func (db *DB) GetFavorites(userID int64) ([]int64, error) {
+    var favorites []Favorite
+    result := db.Where("user_id = ?", userID).Find(&favorites)
+    if result.Error != nil {
+        return nil, result.Error
+    }
+
+    movieIDs := make([]int64, len(favorites))
+    for i, fav := range favorites {
+        movieIDs[i] = fav.MovieID
+    }
+    return movieIDs, nil
 }
