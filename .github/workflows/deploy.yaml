@@ -7,15 +7,19 @@ on:
 
 jobs:
   deploy-api:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
       - name: Deploy API to SFTP
         run: |
-          sudo apt-get update && sudo apt-get install lftp
-          lftp -e "set sftp:auto-confirm yes; open -u ${{ secrets.SFTP1_USERNAME }},${{ secrets.SFTP_PASSWORD }} ${{ secrets.SFTP1_HOST }}; mirror -R ./movie-recommendation-api /remote/path/api; bye"
+          lftp -e "set sftp:auto-confirm yes; open -u ${{ secrets.SFTP1_USERNAME }},${{ secrets.SFTP_PASSWORD }} sftp://${{ secrets.SFTP1_HOST }}; mirror -R ./movie-recommendation-api /remote/path/api; bye"
 
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -23,10 +27,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
       - name: Deploy Frontend to SFTP
         run: |
-          sudo apt-get update && sudo apt-get install lftp
-          lftp -e "set sftp:auto-confirm yes; open -u ${{ secrets.SFTP2_USERNAME }},${{ secrets.SFTP_PASSWORD }} ${{ secrets.SFTP2_HOST }}; mirror -R ./movie-recommendation-frontend /remote/path/frontend; bye"
+          lftp -e "set sftp:auto-confirm yes; open -u ${{ secrets.SFTP2_USERNAME }},${{ secrets.SFTP_PASSWORD }} sftp://${{ secrets.SFTP2_HOST }}; mirror -R ./movie-recommendation-frontend /remote/path/frontend; bye"
 
   restart-api:
     needs: [deploy-api]
