@@ -46,6 +46,7 @@
     "bits-ui": "^0.21.6",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
+    "jsdom": "^24.0.0",
     "lucide-svelte": "^0.378.0",
     "sinon": "^17.0.1",
     "svelte-routing": "^2.12.0",
