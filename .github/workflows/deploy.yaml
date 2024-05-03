@@ -15,7 +15,7 @@ jobs:
       - name: Deploy API to SFTP
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
-          server: sftp://sftp1.example.com
+          server: ${{ secrets.SFTP1_HOST }}
           username: ${{ secrets.SFTP1_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           local-dir: ./movie-recommendation-api/
@@ -30,7 +30,7 @@ jobs:
       - name: Deploy Frontend to SFTP
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
-          server: sftp://sftp2.example.com
+          server: ${{ secrets.SFTP2_HOST }}
           username: ${{ secrets.SFTP2_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           local-dir: ./movie-recommendation-frontend/
