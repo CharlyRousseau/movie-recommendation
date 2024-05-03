@@ -14,7 +14,7 @@ type jwtCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func RegisterRoutes(e *echo.Echo, db *database.DB) {
+func RegisterRoutes(e *echo.Echo, db database.DatabaseInterface) {
 	e.POST("/users", CreateUser(db))
 	e.POST("/login", LoginUser(db))
 	r := e.Group("")

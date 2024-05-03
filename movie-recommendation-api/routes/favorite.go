@@ -10,7 +10,7 @@ import (
 )
 
 // GetFavorites returns a handler function that retrieves all favorites for a user
-func GetFavorites(db *database.DB) echo.HandlerFunc {
+func GetFavorites(db database.DatabaseInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user").(*jwt.Token)
 		claims := token.Claims.(*jwtCustomClaims)
@@ -25,7 +25,7 @@ func GetFavorites(db *database.DB) echo.HandlerFunc {
 	}
 }
 
-func AddFavorite(db *database.DB) echo.HandlerFunc {
+func AddFavorite(db database.DatabaseInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		token := c.Get("user").(*jwt.Token)
@@ -52,7 +52,7 @@ func AddFavorite(db *database.DB) echo.HandlerFunc {
 		return c.JSON(http.StatusCreated, map[string]string{"message": "Favorite added successfully"})
 	}
 }
-func RemoveFavorite(db *database.DB) echo.HandlerFunc {
+func RemoveFavorite(db database.DatabaseInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		token := c.Get("user").(*jwt.Token)
 		claims := token.Claims.(*jwtCustomClaims)

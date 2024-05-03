@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func GetMeHandler(db *database.DB) echo.HandlerFunc {
+func GetMeHandler(db database.DatabaseInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		user := c.Get("user").(*jwt.Token)
 		claims := user.Claims.(*jwtCustomClaims)

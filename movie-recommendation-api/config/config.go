@@ -11,7 +11,7 @@ type Config struct {
 	DBUser     string
 	DBPassword string
 	DBName     string
-	TMDBApiKey string
+	CorsFrontEnd string
 }
 
 func LoadConfig() (*Config, error) {
@@ -21,7 +21,7 @@ func LoadConfig() (*Config, error) {
 		DBUser:     os.Getenv("DB_USER"),
 		DBPassword: os.Getenv("DB_PASSWORD"),
 		DBName:     os.Getenv("DB_NAME"),
-		TMDBApiKey: os.Getenv("TMDB_API_KEY"),
+		CorsFrontEnd: os.Getenv("CORS_FRONT_END"),
 	}
 
 	return cfg, nil
