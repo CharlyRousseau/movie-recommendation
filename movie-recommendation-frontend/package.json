@@ -7,6 +7,7 @@
     "test": "vitest",
     "coverage": "vitest --coverage.enabled --coverage.exclude='postcss.config.cjs' --coverage.exclude='tailwind.config.js' --coverage.exclude='svelte.config.js' --coverage.exclude='src/main.ts' ",
     "dev": "vite",
+    "serve": "vite --host 0.0.0.0 --port $CURSEOS_NETWORK0_PORT",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json"
