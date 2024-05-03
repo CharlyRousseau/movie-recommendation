@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { onMount, setContext } from "svelte";
+    import { onMount } from "svelte";
     import { link } from "svelte-routing";
     import { navigate } from "svelte-routing";
+    import { cn } from "$lib/utils.js";
 
     let className: string | undefined | null = undefined;
     export { className as class };
-    import { cn } from "$lib/utils.js";
 
     const API_URL = import.meta.env.VITE_API_URL;
 

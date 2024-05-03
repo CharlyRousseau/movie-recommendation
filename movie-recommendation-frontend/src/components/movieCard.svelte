@@ -1,6 +1,5 @@
 <script lang="ts">
-    import * as Card from "$lib/components/ui/card";
-
+    import * as Card from "$shadcn/ui/card";
     export let title: string;
     export let date: string;
     export let imageSrc: string;
@@ -13,7 +12,7 @@
         <Card.Title class="line-clamp-1">{title}</Card.Title>
         <Card.Description>{date}</Card.Description>
     </Card.Header>
-    <Card.Content class="relative h-[300px] m-4">
+    <Card.Content class="relative h-[250px] m-4">
         <img
             class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full object-cover rounded shadow"
             src={baseimg + imageSrc}

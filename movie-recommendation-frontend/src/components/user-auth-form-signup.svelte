@@ -1,11 +1,11 @@
 <script lang="ts">
     import Loader from "lucide-svelte/icons/loader";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
-    import { Label } from "$lib/components/ui/label/index.js";
+    import { Button } from "$shadcn/ui/button/index.js";
+    import { Input } from "$shadcn/ui/input/index.js";
+    import { Label } from "$shadcn/ui/label/index.js";
+    import * as Alert from "$shadcn/ui/alert";
     import { cn } from "$lib/utils.js";
-    import * as Alert from "$lib/components/ui/alert";
-    import { navigate } from 'svelte-routing';
+    import { navigate } from "svelte-routing";
 
     const API_URL = import.meta.env.VITE_API_URL;
 
@@ -17,7 +17,7 @@
     let password = "";
     let isLoading = false;
     let error = "";
-    let success = ""; 
+    let success = "";
 
     async function onSubmit() {
         isLoading = true;
@@ -29,17 +29,17 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username,email, password }),
+                body: JSON.stringify({ username, email, password }),
             });
 
             if (!response.ok) {
                 const data = await response.json();
                 error = data.message;
-            }else{
+            } else {
                 success = "User created successfully";
-                      setTimeout(() => {
-                        navigate('/login');
-                    }, 2000);
+                setTimeout(() => {
+                    navigate("/login");
+                }, 2000);
             }
         } catch (err) {
             error =
@@ -88,18 +88,19 @@
                 />
                 {#if error}
                     <Alert.Root>
-                        <Alert.Title class="text-red-500" >Error</Alert.Title>
-                            <Alert.Description>
-                                {error}
-                            </Alert.Description>
+                        <Alert.Title class="text-red-500">Error</Alert.Title>
+                        <Alert.Description>
+                            {error}
+                        </Alert.Description>
                     </Alert.Root>
                 {/if}
                 {#if success}
                     <Alert.Root>
-                        <Alert.Title class="text-green-500">Success</Alert.Title>
-                            <Alert.Description>
+                        <Alert.Title class="text-green-500">Success</Alert.Title
+                        >
+                        <Alert.Description>
                             {success}
-                            </Alert.Description>
+                        </Alert.Description>
                     </Alert.Root>
                 {/if}
                 <Button type="submit" disabled={isLoading}>

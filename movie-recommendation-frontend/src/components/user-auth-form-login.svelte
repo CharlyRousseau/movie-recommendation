@@ -1,13 +1,11 @@
 <script lang="ts">
     import Loader from "lucide-svelte/icons/loader";
-    import { Button } from "$lib/components/ui/button/index.js";
-    import { Input } from "$lib/components/ui/input/index.js";
-    import { Label } from "$lib/components/ui/label/index.js";
+    import { Button } from "$shadcn/ui/button/index.js";
+    import { Input } from "$shadcn/ui/input/index.js";
+    import { Label } from "$shadcn/ui/label/index.js";
+    import Notification from "$components/notification.svelte";
     import { cn } from "$lib/utils.js";
-    import { navigate } from "svelte-routing";
-    import * as Alert from "$lib/components/ui/alert";
-
-    const API_URL = import.meta.env.VITE_API_URL;
+    import { onSubmit } from "$lib/formHandler";
 
     let className: string | undefined | null = undefined;
     export { className as class };
@@ -18,44 +16,36 @@
     let error = "";
     let success = "";
 
-    async function onSubmit() {
+    async function handleSubmit(
+        url: string,
+        body: any,
+        successMessage: string,
+        redirectUrl: string,
+    ) {
         isLoading = true;
         error = "";
-
-        try {
-            const response = await fetch(`${API_URL}/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                error = data.message;
-            } else {
-                localStorage.setItem("jwt", data.token);
-
-                success = "Successfully logged in! Redirecting...";
-                setTimeout(() => {
-                    navigate("/");
-                }, 2000);
+        const result = await onSubmit(url, body, successMessage, redirectUrl);
+        isLoading = false;
+        if (result.error) {
+            error = result.error;
+        } else {
+            if (result.success) {
+                success = result.success;
             }
-        } catch (err) {
-            error =
-                err instanceof Error
-                    ? err.message
-                    : "An unknown error occurred";
-        } finally {
-            isLoading = false;
         }
     }
 </script>
 
 <div class={cn("grid gap-6", className)} {...$$restProps}>
-    <form on:submit|preventDefault={onSubmit}>
+    <form
+        on:submit|preventDefault={() =>
+            handleSubmit(
+                "/login",
+                { email, password },
+                "Successfully logged in! Redirecting...",
+                "/",
+            )}
+    >
         <div class="grid gap-2">
             <div class="grid gap-1">
                 <Label class="sr-only" for="email">Email</Label>
@@ -79,34 +69,18 @@
                     disabled={isLoading}
                 />
                 {#if error}
-                    <Alert.Root>
-                        <Alert.Title class="text-red-500">Error</Alert.Title>
-                        <Alert.Description>
-                            {error}
-                        </Alert.Description>
-                    </Alert.Root>
+                    <Notification type="error" message={error} />
                 {/if}
                 {#if success}
-                    <Alert.Root>
-                        <Alert.Title class="text-green-500">Success</Alert.Title
-                        >
-                        <Alert.Description>
-                            {success}
-                        </Alert.Description>
-                    </Alert.Root>
+                    <Notification type="success" message={success} />
                 {/if}
             </div>
             <Button type="submit" disabled={isLoading}>
                 {#if isLoading}
-                    <Loader />
+                    <Loader class="loader animate-spin" />
                 {/if}
-                Sign In with Email
+                Connect
             </Button>
         </div>
     </form>
-    <div class="relative">
-        <div class="absolute inset-0 flex items-center">
-            <span class="w-full border-t" />
-        </div>
-    </div>
 </div>
