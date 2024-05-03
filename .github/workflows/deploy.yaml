@@ -17,7 +17,7 @@ jobs:
         with:
           username: ${{ secrets.SFTP1_USERNAME }}
           server: "cursehosting-mutual-12.cursehosting.com"
-          port: 22
+          port: 2022
           local_path: './movie-recommendation-api/*'
           remote_path: '/'
           sftp_only: true
@@ -34,7 +34,7 @@ jobs:
         with:
           username: ${{ secrets.SFTP2_USERNAME }}  # Assuming you might have a different username or secret for frontend
           server: "cursehosting-mutual-11.cursehosting.com"
-          port: 22
+          port: 2022
           local_path: './movie-recommendation-frontend/*'
           remote_path: '/'
           sftp_only: true
