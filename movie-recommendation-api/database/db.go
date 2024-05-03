@@ -6,24 +6,26 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"movie-reccomendation-api/models"
+
 )
+
+type DatabaseInterface interface {
+    CreateUser(user *models.User) error
+    LoginUser(email, password string) (*models.User, error)
+    GetUserByUsernameOrEmail(username, email string) (*models.User, error)
+    GetUserByID(id int64) (*models.User, error)
+    AddFavorite(userID, itemID int64) error
+    GetFavoritesByUser(userID int64) ([]models.Favorite, error)
+    GetFavoriteByUserAndId(userID, itemID int64) (*models.Favorite, error)
+    RemoveFavorite(userID, itemID int64) error
+}
 
 type DB struct {
 	*gorm.DB
 }
-type User struct {
-	ID       int64
-	Username string
-	Email    string
-	Password string
-}
-type Favorite struct {
-	ID     int64
-	UserID int64
-	ItemID int64
-}
 
-func NewDB(connectionString string) (*DB, error) {
+func NewDB(connectionString string) (DatabaseInterface, error) {
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 	if err != nil {
 		return nil, err
@@ -32,7 +34,7 @@ func NewDB(connectionString string) (*DB, error) {
 	return &DB{db}, nil
 }
 
-func (db *DB) CreateUser(user *User) error {
+func (db *DB) CreateUser(user *models.User) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
@@ -46,8 +48,8 @@ func (db *DB) CreateUser(user *User) error {
 	return nil
 }
 
-func (db *DB) LoginUser(email, password string) (*User, error) {
-	var user User
+func (db *DB) LoginUser(email, password string) (*models.User, error) {
+	var user models.User
 	if err := db.Where("email = ?", email).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("invalid login credentials")
@@ -62,8 +64,8 @@ func (db *DB) LoginUser(email, password string) (*User, error) {
 	return &user, nil
 }
 
-func (db *DB) GetUserByUsernameOrEmail(username, email string) (*User, error) {
-	var user User
+func (db *DB) GetUserByUsernameOrEmail(username, email string) (*models.User, error) {
+	var user models.User
 	err := db.Where("username = ? OR email = ?", username, email).First(&user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -74,8 +76,8 @@ func (db *DB) GetUserByUsernameOrEmail(username, email string) (*User, error) {
 	return &user, nil
 }
 
-func (db *DB) GetUserByID(id int64) (*User, error) {
-	var user User
+func (db *DB) GetUserByID(id int64) (*models.User, error) {
+	var user models.User
 	err := db.Where("id = ?", id).First(&user).Error
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -86,7 +88,7 @@ func (db *DB) GetUserByID(id int64) (*User, error) {
 	return &user, nil
 }
 func (db *DB) AddFavorite(userID, itemID int64) error {
-	favorite := Favorite{
+	favorite := models.Favorite{
 		UserID: userID,
 		ItemID: itemID,
 	}
@@ -99,8 +101,8 @@ func (db *DB) AddFavorite(userID, itemID int64) error {
 	return nil
 }
 
-func (db *DB) GetFavoritesByUser(userID int64) ([]Favorite, error) {
-	var favorites []Favorite
+func (db *DB) GetFavoritesByUser(userID int64) ([]models.Favorite, error) {
+	var favorites []models.Favorite
 	result := db.Where("user_id = ?", userID).Find(&favorites)
 	if result.Error != nil {
 		return nil, result.Error
@@ -108,8 +110,8 @@ func (db *DB) GetFavoritesByUser(userID int64) ([]Favorite, error) {
 
 	return favorites, nil
 }
-func (db *DB) GetFavoriteByUserAndId(userID, itemID int64) (*Favorite, error) {
-	var favorite Favorite
+func (db *DB) GetFavoriteByUserAndId(userID, itemID int64) (*models.Favorite, error) {
+	var favorite models.Favorite
 	result := db.Where("user_id = ? AND item_id = ?", userID, itemID).First(&favorite)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
@@ -122,6 +124,6 @@ func (db *DB) GetFavoriteByUserAndId(userID, itemID int64) (*Favorite, error) {
 }
 
 func (db *DB) RemoveFavorite(userID, itemID int64) error {
-	result := db.Where("user_id = ? AND item_id = ?", userID, itemID).Delete(&Favorite{})
+	result := db.Where("user_id = ? AND item_id = ?", userID, itemID).Delete(&models.Favorite{})
 	return result.Error
 }

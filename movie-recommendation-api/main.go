@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"movie-reccomendation-api/config"
 	"movie-reccomendation-api/database"
@@ -22,17 +21,10 @@ func main() {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
-	err = db.Exec("SELECT 1").Error
-	if err != nil {
-		log.Fatalf("failed to ping database: %v", err)
-	}
-
-	fmt.Println("Database connection successful!")
-
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:5173"},
+		AllowOrigins: []string{cfg.CorsFrontEnd},
 		AllowHeaders: []string{echo.HeaderAuthorization, echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 

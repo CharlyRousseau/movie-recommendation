@@ -2,6 +2,7 @@ package routes
 
 import (
 	"movie-reccomendation-api/database"
+	"movie-reccomendation-api/models"
 	"net/http"
 	"time"
 
@@ -14,9 +15,9 @@ type UserResponse struct {
 	Email string `json:"email"`
 }
 
-func CreateUser(db *database.DB) echo.HandlerFunc {
+func CreateUser(db database.DatabaseInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		var user database.User
+		var user models.User
 		if err := c.Bind(&user); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 		}
@@ -36,9 +37,9 @@ func CreateUser(db *database.DB) echo.HandlerFunc {
 	}
 }
 
-func LoginUser(db *database.DB) echo.HandlerFunc {
+func LoginUser(db database.DatabaseInterface) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		user := new(database.User)
+		user := new(models.User)
 
 		if err := c.Bind(&user); err != nil {
 			return echo.NewHTTPError(http.StatusBadRequest, err.Error())
