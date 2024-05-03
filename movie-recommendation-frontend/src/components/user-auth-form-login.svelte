@@ -31,6 +31,7 @@
         } else {
             if (result.success) {
                 success = result.success;
+                localStorage.setItem("jwt", result.token);
             }
         }
     }

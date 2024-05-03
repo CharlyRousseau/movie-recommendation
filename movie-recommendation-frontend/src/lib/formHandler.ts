@@ -11,15 +11,18 @@ export async function onSubmit(url: string, body: any, successMessage: string, r
             },
             body: JSON.stringify(body),
         });
-
+        const data = await response.json();
+        console.log(data);
         if (!response.ok) {
-            const data = await response.json();
             return { error: data.message };
         } else {
             setTimeout(() => {
                 navigate(redirectUrl);
             }, 2000);
-            return { success: successMessage };
+            return {
+                success: successMessage,
+                token: data.token
+            };
         }
     } catch (err) {
         return { error: err instanceof Error ? err.message : "An unknown error occurred" };

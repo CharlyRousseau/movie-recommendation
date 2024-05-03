@@ -4,9 +4,10 @@
     import { onMount, getContext } from "svelte";
 
     const API_URL = import.meta.env.VITE_API_URL;
-
+    let data: any = null;
     let className: string | undefined | null = undefined;
 
+    // TO DO implements movie fetch based on ID
     onMount(async () => {
         const token = localStorage.getItem("jwt");
         console.log(token);
@@ -21,13 +22,11 @@
                 };
 
                 const response = await fetch(`${API_URL}/favorites`, options);
-                const data = await response.json();
-                console.log(data);
+                data = await response.json();
             } catch (err) {
                 console.error(err);
             }
         } else {
-            console.log("No token found");
             navigate("/");
         }
     });
@@ -38,4 +37,5 @@
 >
     <Navbar />
     <h1 class="text-2xl font-semibold tracking-tight">Favorites</h1>
+    <pre>{data && JSON.stringify(data, null, 2)}</pre>
 </div>

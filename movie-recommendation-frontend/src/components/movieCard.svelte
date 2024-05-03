@@ -1,9 +1,12 @@
 <script lang="ts">
     import * as Card from "$shadcn/ui/card";
+    import AddFavorite from "$components/addFavorite.svelte";
+
     export let title: string;
     export let date: string;
     export let imageSrc: string;
     export let grade: number;
+    export let itemid: number;
     const baseimg = "https://image.tmdb.org/t/p/w500";
 </script>
 
@@ -20,6 +23,9 @@
         />
     </Card.Content>
     <Card.Footer>
-        <p>{grade}</p>
+        <div class="relative">
+            <p>{grade}</p>
+            <AddFavorite {itemid}></AddFavorite>
+        </div>
     </Card.Footer>
 </Card.Root>

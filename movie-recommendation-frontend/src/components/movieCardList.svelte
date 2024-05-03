@@ -13,6 +13,7 @@
             date={movie.release_date}
             imageSrc={movie.backdrop_path}
             grade={movie.vote_average}
+            itemid={movie.id}
         />
     {/each}
 </div>

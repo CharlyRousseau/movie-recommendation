@@ -21,7 +21,9 @@
 
     onMount(async () => {
         const token = localStorage.getItem("jwt");
+        console.log("oui");
         if (token) {
+            console.log(token);
             try {
                 const response = await fetch(`${API_URL}/me`, {
                     headers: {

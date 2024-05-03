@@ -4,7 +4,7 @@
     import Pagination from "$components/pagination.svelte";
     import type { Movie } from "$types/movie";
 
-    const TOKEN = import.meta.env.TMDB_TOKEN;
+    const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
     let className: string | undefined | null = undefined;
     import { onMount } from "svelte";
