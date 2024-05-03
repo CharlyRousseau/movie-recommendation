@@ -27,5 +27,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
+      working-directory: movie-recommendation-frontend
     - run: npm run build --if-present
+      working-directory: movie-recommendation-frontend
     - run: npm run coverage
+      working-directory: movie-recommendation-frontend
+
