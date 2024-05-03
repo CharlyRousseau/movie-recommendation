@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "coverage": "vitest --coverage.enabled --coverage.exclude='postcss.config.cjs' --coverage.exclude='tailwind.config.js' --coverage.exclude='svelte.config.js' --coverage.exclude='main.ts' ",
+    "coverage": "vitest --coverage.enabled --coverage.exclude='postcss.config.cjs' --coverage.exclude='tailwind.config.js' --coverage.exclude='svelte.config.js' --coverage.exclude='src/main.ts' ",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
