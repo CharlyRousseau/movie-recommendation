@@ -7,19 +7,21 @@ on:
 
 jobs:
   deploy-api:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install lftp
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
-
-      - name: Deploy API to SFTP
-        run: |
-          lftp -e "set sftp:auto-confirm yes; open -u ${{ secrets.SFTP1_USERNAME }},${{ secrets.SFTP_PASSWORD }} sftp://${{ secrets.SFTP1_HOST }}; mirror -R ./movie-recommendation-api /remote/path/api; bye"
+      - name: Deploy API
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{ secrets.SFTP1_USERNAME }}
+          server: "cursehosting-mutual-12.cursehosting.com"
+          port: 22
+          local_path: './movie-recommendation-api/*'
+          remote_path: '/'
+          sftp_only: true
+          password: ${{ secrets.SFTP_PASSWORD }}
 
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -27,14 +29,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install lftp
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
-
-      - name: Deploy Frontend to SFTP
-        run: |
-          lftp -e "set sftp:auto-confirm yes; open -u ${{ secrets.SFTP2_USERNAME }},${{ secrets.SFTP_PASSWORD }} sftp://${{ secrets.SFTP2_HOST }}; mirror -R ./movie-recommendation-frontend /remote/path/frontend; bye"
+      - name: Deploy Frontend
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{ secrets.SFTP2_USERNAME }}  # Assuming you might have a different username or secret for frontend
+          server: "cursehosting-mutual-11.cursehosting.com"
+          port: 22
+          local_path: './movie-recommendation-frontend/*'
+          remote_path: '/'
+          sftp_only: true
+          password: ${{ secrets.SFTP_PASSWORD }}
 
   restart-api:
     needs: [deploy-api]
