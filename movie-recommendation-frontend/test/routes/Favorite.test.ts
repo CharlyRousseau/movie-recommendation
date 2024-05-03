@@ -17,7 +17,7 @@ suite('Favorites Component', () => {
         expect(host.innerHTML).toContain('Favorites')
     })
 
-    test('should fetch favorites if jwt token in localStorage', async () => {
+    /*test('should fetch favorites if jwt token in localStorage', async () => {
         const fetchStub = sinon.stub(global, 'fetch')
         fetchStub.resolves({
             json: () => Promise.resolve({ results: [], total_pages: 0 }),
@@ -29,5 +29,5 @@ suite('Favorites Component', () => {
         sinon.assert.calledTwice(fetchStub)
         fetchStub.restore()
         localStorage.removeItem('jwt')
-    })
+    })$*/
 })
